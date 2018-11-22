@@ -118,9 +118,16 @@ namespace DataGridViewExtensions
                 throw new InvalidOperationException("Class cannot have nested collections.");
             }
 
-            var columns = new Dictionary<PropertyInfo, string>();
-            properties.ForEach(p => columns.Add(p, (GetColumnName(p))));
-            columns.ToList().ForEach(column => dataGridView.Columns.Add(column.Key.Name, column.Value));
+           var columns = new Dictionary<PropertyInfo, string>();
+           properties.ForEach(p => columns.Add(p, (GetColumnName(p))));
+
+            foreach (var column in columns)
+            {
+                if (CheckPropertyType(column.Key, typeof(Boolean)))
+                    dataGridView.Columns.Add(new DataGridViewCheckBoxColumn { Name = column.Key.Name });
+                else
+                    dataGridView.Columns.Add(column.Key.Name, column.Value);
+            }
             dataGridView.Rows.Add(dataToBindToGrid.Count());
             var rowIndex = 0;
             dataToBindToGrid.ToList().ForEach(data =>
@@ -157,6 +164,26 @@ namespace DataGridViewExtensions
             }
             var description = descriptionAttribute as DescriptionAttribute;
             return description == null ? propertyInfo.Name : description.Description;
+        }
+        
+        /// <summary>
+        /// Check if the class property is of the specified type.
+        /// </summary>
+        /// <param name="propertyInfo">PropertyInfo</param>
+        /// <param name="type">typeof()</param>
+        /// <returns></returns>
+        private static bool CheckPropertyType(_PropertyInfo propertyInfo, Type type)
+        {
+            var result = false;
+            var typeToString = type.ToString();
+            var ptype = propertyInfo.PropertyType.ToString();
+
+            if (ptype == typeToString)
+            {
+                result = true;
+            }
+
+            return result;
         }
     }
 }
