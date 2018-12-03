@@ -64,4 +64,11 @@ var contactInfo = new List<ContactInfoModel>
 var dataGrid = new DataGridView();
 dataGrid.BindData(contactInfo);
 ```
+# Disclaimer
 
+This code was mostly made by [Givens24](https://github.com/Givens24/DataGridViewExtensions), and he deserves a huge thank.
+
+I didn't feel to make a pull request on the original code, who is like two years without changes.
+
+So I took the liberty to fork the original one and add change some of it.
+Mostly now bool properties become checkboxes columns.
